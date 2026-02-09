@@ -10,7 +10,7 @@ export async function GET() {
     const session = await auth();
 
     if (!session?.user?.email) {
-        return NextResponse.redirect(new URL("/sign-in?error=oauth", "http://localhost:3000"));
+        return NextResponse.redirect(new URL("/sign-in?error=oauth", `${process.env.NEXT_PUBLIC_BASE_URL}`));
     }
 
     const email = session.user.email;
@@ -30,5 +30,5 @@ export async function GET() {
 
     await setSession(user);
 
-    return NextResponse.redirect(new URL("/dashboard", "http://localhost:3000"));
+    return NextResponse.redirect(new URL("/dashboard", `${process.env.NEXT_PUBLIC_BASE_URL}`));
 }
