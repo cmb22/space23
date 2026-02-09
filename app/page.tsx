@@ -1,42 +1,18 @@
 import { LandingHero } from "@/components/ui/LandingHero/LandingHero";
 import { TeachersList } from "@/components/ui/TeachersList/TeachersList";
-
-type TeacherRow = {
-  id: number;
-  name: string | null;
-  email: string;
-  bio: string | null;
-  languages: string[];
-  timezone: string;
-  currency: string;
-  avatarUrl: string | null;
-  videoUrl: string | null;
-  videoSource: string | null;
-  fromPriceCents: number | null;
-};
-
-type ApiResponse = { teachers: TeacherRow[] };
-
-const getTeachers = async (): Promise<TeacherRow[]> => {
-  console.log("process.env.NEXT_PUBLIC_BASE_URL", process.env.NEXT_PUBLIC_BASE_URL);
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/teachers`, {
-    cache: "no-store",
-  });
-
-  // Fallback if NEXT_PUBLIC_APP_URL not set (local dev)
-  // if (!res.ok) {
-  //   const localRes = await fetch("http://localhost:3000/api/teachers", { cache: "no-store" });
-  //   const localData = (await localRes.json()) as ApiResponse;
-  //   return localData.teachers ?? [];
-  // }
-
-  const data = (await res.json()) as ApiResponse;
-  return data.teachers ?? [];
-};
+import { getTeachers } from "@/lib/teachers/getTeachers";
 
 const HomePage = async () => {
   const teachers = await getTeachers();
-
+  console.log(process.env.POSTGRES_URL)
+  if (teachers instanceof Error) {
+    return (
+      <div style={{ padding: 24 }}>
+        <h1>Teachers</h1>
+        <p>Error loading teachers: {teachers.message}</p>
+      </div>
+    );
+  }
   return (
     <>
       <LandingHero
