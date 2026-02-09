@@ -7,15 +7,21 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import type { DateSelectArg, DatesSetArg, EventInput, EventClickArg } from '@fullcalendar/core';
 
-// ✅ IMPORTANT: FullCalendar CSS nur hier importieren (nicht globals)
 import './fullcalendar.css';
 
-type AvailabilityRow = {
+type AtomicAvailabilityRow = {
     id: number;
     teacherId: number;
-    startUtc: string; // ISO
-    endUtc: string; // ISO
-    createdAt?: string;
+    startUtc: string;
+    endUtc: string;
+};
+
+type MergedAvailabilityEvent = {
+    id: string;
+    start: string;
+    end: string;
+    title?: string;
+    display?: string;
 };
 
 const pad2 = (n: number) => String(n).padStart(2, '0');
@@ -51,14 +57,51 @@ const weekdayOptions = [
     { label: 'Saturday', value: 6 },
 ];
 
-// ---------- helpers (UTC-safe) ----------
 const addDays = (d: Date, days: number) => new Date(d.getTime() + days * 24 * 60 * 60 * 1000);
 const addMinutes = (d: Date, minutes: number) => new Date(d.getTime() + minutes * 60 * 1000);
 
 const startOfDayUtc = (d: Date) =>
     new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0, 0));
 
-const isFiniteNumber = (n: unknown): n is number => typeof n === 'number' && Number.isFinite(n);
+function isMergedEventArray(x: any): x is MergedAvailabilityEvent[] {
+    return Array.isArray(x) && (x.length === 0 || (typeof x[0]?.start === 'string' && typeof x[0]?.end === 'string'));
+}
+
+function isAtomicRowArray(x: any): x is AtomicAvailabilityRow[] {
+    return Array.isArray(x) && (x.length === 0 || (typeof x[0]?.startUtc === 'string' && typeof x[0]?.endUtc === 'string'));
+}
+
+const normalizeToCalendarEvents = (data: any): EventInput[] => {
+    if (Array.isArray(data?.events)) return normalizeToCalendarEvents(data.events);
+
+    if (isMergedEventArray(data)) {
+        return data.map((e) => ({
+            id: e.id,
+            start: e.start,
+            end: e.end,
+            title: e.title ?? '',
+            display: e.display ?? 'block',
+            backgroundColor: 'rgba(46, 204, 113, 0.28)',
+            borderColor: 'rgba(46, 204, 113, 0.28)',
+            textColor: 'transparent',
+        }));
+    }
+
+    if (isAtomicRowArray(data)) {
+        return data.map((a) => ({
+            id: `av-${a.id}`,
+            start: a.startUtc,
+            end: a.endUtc,
+            title: '',
+            display: 'auto',
+            backgroundColor: 'rgba(46, 204, 113, 0.28)',
+            borderColor: 'rgba(46, 204, 113, 0.28)',
+            textColor: 'transparent',
+        }));
+    }
+
+    return [];
+};
 
 export default function FullCalendarWeek() {
     const calendarRef = useRef<FullCalendar | null>(null);
@@ -67,8 +110,7 @@ export default function FullCalendarWeek() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // repeat weekly controls (15-min increments)
-    const [repeatWeekday, setRepeatWeekday] = useState<number>(2); // Tuesday
+    const [repeatWeekday, setRepeatWeekday] = useState<number>(2);
     const [repeatStart, setRepeatStart] = useState<string>('09:00');
     const [repeatEnd, setRepeatEnd] = useState<string>('12:00');
 
@@ -87,39 +129,20 @@ export default function FullCalendarWeek() {
         return `/api/teachers/${teacherId}/availability`;
     }, [teacherId]);
 
-    const normalizeAvailabilityPayload = (data: any): AvailabilityRow[] => {
-        if (Array.isArray(data)) return data as AvailabilityRow[];
-        if (Array.isArray(data?.availability)) return data.availability as AvailabilityRow[];
-        return [];
-    };
-
-    const buildEvents = (rows: AvailabilityRow[]): EventInput[] => {
-        return rows.map((a) => ({
-            id: `av-${a.id}`,
-            start: a.startUtc,
-            end: a.endUtc,
-            title: '',
-            display: 'auto',
-            backgroundColor: 'rgba(46, 204, 113, 0.28)',
-            borderColor: 'rgba(46, 204, 113, 0.28)',
-            textColor: 'transparent',
-        }));
-    };
-
-    const fetchAvailability = async (rangeStart: Date, rangeEnd: Date) => {
-        if (!apiBase) return [] as AvailabilityRow[];
+    const fetchAvailabilityEvents = async (rangeStart: Date, rangeEnd: Date) => {
+        if (!apiBase) return [] as EventInput[];
 
         const from = rangeStart.toISOString();
         const to = rangeEnd.toISOString();
 
-        const res = await fetch(`${apiBase}?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`, {
-            cache: 'no-store',
-        });
+        const res = await fetch(
+            `${apiBase}?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&mode=merged`,
+            { cache: 'no-store' }
+        );
 
         if (!res.ok) throw new Error(await res.text());
-
         const data = await res.json();
-        return normalizeAvailabilityPayload(data);
+        return normalizeToCalendarEvents(data);
     };
 
     const reloadCalendar = async () => {
@@ -130,9 +153,7 @@ export default function FullCalendarWeek() {
         setLoading(true);
         setError(null);
         try {
-            const rows = await fetchAvailability(rangeRef.current.start, rangeRef.current.end);
-            const events = buildEvents(rows);
-
+            const events = await fetchAvailabilityEvents(rangeRef.current.start, rangeRef.current.end);
             api.removeAllEvents();
             api.addEventSource(events);
         } catch (e) {
@@ -177,10 +198,23 @@ export default function FullCalendarWeek() {
     const handleEventClick = async (info: EventClickArg) => {
         if (!teacherId || !apiBase) return;
 
-        const id = info.event.id;
-        if (!id.startsWith('av-')) return;
+        // merged block delete by eventId
+        if (!info.event.id?.startsWith('av-')) {
+            const ok = confirm('Diesen Availability-Block löschen?');
+            if (!ok) return;
 
-        const availabilityId = Number(id.slice(3));
+            const res = await fetch(`${apiBase}?eventId=${encodeURIComponent(info.event.id)}`, { method: 'DELETE' });
+            if (!res.ok) {
+                alert(await res.text());
+                return;
+            }
+
+            await reloadCalendar();
+            return;
+        }
+
+        // atomic row delete by id (optional fallback)
+        const availabilityId = Number(info.event.id.slice(3));
         if (!Number.isFinite(availabilityId)) return;
 
         if (!confirm('Availability löschen?')) return;
@@ -209,16 +243,14 @@ export default function FullCalendarWeek() {
             return;
         }
 
-        // anchor = start of currently visible range if available, else today
         const anchor = rangeRef.current?.start ? new Date(rangeRef.current.start) : new Date();
         const anchorDayUtc = startOfDayUtc(anchor);
 
-        // Find first occurrence in the visible week for the chosen weekday (UTC weekday)
-        const anchorWeekday = anchorDayUtc.getUTCDay(); // 0..6
+        const anchorWeekday = anchorDayUtc.getUTCDay();
         const delta = (repeatWeekday - anchorWeekday + 7) % 7;
         const first = addDays(anchorDayUtc, delta);
 
-        const weeks = 13; // ~3 months
+        const weeks = 13;
         const occurrences: { startUtc: string; endUtc: string }[] = [];
 
         for (let w = 0; w < weeks; w++) {
@@ -231,7 +263,6 @@ export default function FullCalendarWeek() {
         setLoading(true);
         setError(null);
         try {
-            // simple sequential POSTs (MVP)
             for (const occ of occurrences) {
                 const res = await fetch(apiBase, {
                     method: 'POST',
@@ -240,7 +271,6 @@ export default function FullCalendarWeek() {
                 });
                 if (!res.ok) throw new Error(await res.text());
             }
-
             await reloadCalendar();
         } catch (e) {
             setError((e as Error).message);

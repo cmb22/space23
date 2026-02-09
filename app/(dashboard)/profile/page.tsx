@@ -212,7 +212,7 @@ export default function ProfilePage() {
                         <div style={{ marginTop: 10 }}>
                             <TeacherAvatarUpload
                                 initialUrl={avatarUrl}
-                                onUploaded={(newUrl) => {
+                                onUploaded={(newUrl: string) => {
                                     setAvatarUrl(newUrl);
                                     setSuccess("Avatar uploaded.");
                                 }}

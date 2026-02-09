@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 
-export function TeacherAvatarUpload({ initialUrl }: { initialUrl: string | null }) {
+
+type TProps = {
+    initialUrl: string | null;
+    onUploaded?: (newUrl: string) => void;
+};
+
+
+export function TeacherAvatarUpload({ initialUrl, onUploaded }: TProps) {
     const [url, setUrl] = useState<string | null>(initialUrl);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);

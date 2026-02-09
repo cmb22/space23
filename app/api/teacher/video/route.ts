@@ -43,16 +43,16 @@ export async function POST(req: Request) {
 
     const publicUrl = `/uploads/videos/${filename}`;
 
-    const [existing] = await db.select().from(teacherProfiles).where(eq(teacherProfiles.teacherId, user.id)).limit(1);
+    const [existing] = await db.select().from(teacherProfiles).where(eq(teacherProfiles.userId, user.id)).limit(1);
     if (existing) {
         await db.update(teacherProfiles).set({
             videoUrl: publicUrl,
             videoSource: "local",
             updatedAt: new Date(),
-        }).where(eq(teacherProfiles.teacherId, user.id));
+        }).where(eq(teacherProfiles.userId, user.id));
     } else {
         await db.insert(teacherProfiles).values({
-            teacherId: user.id,
+            userId: user.id,
             videoUrl: publicUrl,
             videoSource: "local",
         });

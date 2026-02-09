@@ -98,7 +98,7 @@ function makeReq(bodyBytes: Uint8Array, headers: Record<string, string>) {
     return new Request("http://localhost:3000/api/stripe/webhook", {
         method: "POST",
         headers,
-        body: bodyBytes,
+        body: Buffer.from(bodyBytes)
     });
 }
 

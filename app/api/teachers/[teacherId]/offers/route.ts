@@ -10,9 +10,22 @@ const createOfferSchema = z.object({
     currency: z.string().length(3).default("EUR"),
 });
 
-export async function GET(_: Request, { params }: { params: { teacherId: string } }) {
-    const teacherId = Number(params.teacherId);
-    const rows = await db.select().from(lessonOffers).where(eq(lessonOffers.teacherId, teacherId));
+export async function GET(
+    _req: Request,
+    ctx: { params: Promise<{ teacherId: string }> }
+) {
+    const { teacherId: teacherIdRaw } = await ctx.params;
+    const teacherId = Number(teacherIdRaw);
+
+    if (!Number.isFinite(teacherId)) {
+        return NextResponse.json({ error: "Invalid teacherId" }, { status: 400 });
+    }
+
+    const rows = await db
+        .select()
+        .from(lessonOffers)
+        .where(eq(lessonOffers.teacherId, teacherId));
+
     return NextResponse.json(rows);
 }
 
