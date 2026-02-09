@@ -86,7 +86,7 @@ async function getPostgresURL(): Promise<string> {
   if (dbChoice.toLowerCase() === 'l') {
     console.log('Setting up local Postgres instance with Docker...');
     await setupLocalPostgres();
-    return 'postgres://postgres:postgres@localhost:54322/postgres';
+    return `${process.env.POSTGRES_URL}` //'postgres://postgres:postgres@localhost:54322/postgres';
   } else {
     console.log(
       'You can find Postgres databases at: https://vercel.com/marketplace?category=databases'
