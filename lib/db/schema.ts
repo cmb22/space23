@@ -5,6 +5,7 @@ import {
   text,
   timestamp,
   integer,
+  boolean
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -13,7 +14,7 @@ export const users = pgTable('users', {
   name: varchar('name', { length: 100 }),
   email: varchar('email', { length: 255 }).notNull().unique(),
   passwordHash: text('password_hash').notNull(),
-  role: varchar('role', { length: 20 }).notNull().default('member'),
+  role: varchar('role', { length: 20 }).notNull().default('student'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
@@ -68,6 +69,74 @@ export const invitations = pgTable('invitations', {
   status: varchar('status', { length: 20 }).notNull().default('pending'),
 });
 
+
+export const teacherProfiles = pgTable("teacher_profiles", {
+  id: serial("id").primaryKey(),
+
+  userId: integer("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id),
+
+  bio: text("bio"),
+  languages: text("languages").array().notNull().default([]),
+
+  timezone: varchar("timezone", { length: 64 }).notNull().default("Europe/Berlin"),
+  currency: varchar("currency", { length: 3 }).notNull().default("EUR"),
+
+  qualifications: text("qualifications"),
+
+  avatarUrl: text("avatar_url"),
+  videoUrl: text("video_url"),
+  videoSource: varchar("video_source", { length: 16 }).notNull().default("local"),
+
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const lessonOffers = pgTable("lesson_offers", {
+  id: serial("id").primaryKey(),
+
+  teacherId: integer("teacher_id")
+    .notNull()
+    .references(() => users.id),
+
+  durationMinutes: integer("duration_minutes").notNull(),
+  priceCents: integer("price_cents").notNull(),
+
+  // ✅ DB: varchar(3)
+  currency: varchar("currency", { length: 3 }).notNull().default("EUR"),
+
+  // ✅ DB: integer 1/0 (nicht boolean)
+  isActive: integer("is_active").notNull().default(1),
+
+  // ✅ DB: timestamp without time zone
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const availabilityRules = pgTable("availability_rules", {
+  id: serial("id").primaryKey(),
+
+  teacherId: integer("teacher_id")
+    .notNull()
+    .references(() => users.id),
+
+  // 0=Sun..6=Sat
+  weekday: integer("weekday").notNull(),
+
+  // minutes since midnight
+  startMin: integer("start_min").notNull(),
+  endMin: integer("end_min").notNull(),
+
+  timezone: varchar("timezone", { length: 64 }).notNull().default("Europe/Berlin"),
+
+  validFrom: timestamp("valid_from", { withTimezone: true }).notNull(),
+  validTo: timestamp("valid_to", { withTimezone: true }).notNull(),
+
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const teamsRelations = relations(teams, ({ many }) => ({
   teamMembers: many(teamMembers),
   activityLogs: many(activityLogs),
@@ -111,6 +180,83 @@ export const activityLogsRelations = relations(activityLogs, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const availabilityOverrides = pgTable('availability_overrides', {
+  id: serial('id').primaryKey(),
+
+  teacherId: integer('teacher_id')
+    .notNull()
+    .references(() => users.id),
+
+  // UTC time range (like your bookings)
+  startUtc: timestamp('start_utc', { withTimezone: true }).notNull(),
+  endUtc: timestamp('end_utc', { withTimezone: true }).notNull(),
+
+  // add = makes available, block = removes availability
+  kind: varchar('kind', { length: 10 }).notNull(), // 'add' | 'block'
+
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
+export const entitlements = pgTable("entitlements", {
+  id: serial("id").primaryKey(),
+
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+
+  product: varchar("product", { length: 32 }).notNull(),
+  // e.g. "LESSONS", "AI_CHAT"
+
+  status: varchar("status", { length: 16 }).notNull(),
+  // "active" | "canceled" | "expired"
+
+  currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
+
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const bookings = pgTable("bookings", {
+  id: serial("id").primaryKey(),
+
+  teacherId: integer("teacher_id").notNull().references(() => users.id),
+  studentId: integer("student_id").notNull().references(() => users.id),
+
+  startUtc: timestamp("start_utc", { withTimezone: true }).notNull(),
+  endUtc: timestamp("end_utc", { withTimezone: true }).notNull(),
+
+  durationMinutes: integer("duration_minutes").notNull(),
+  priceCents: integer("price_cents").notNull(),
+  currency: varchar("currency", { length: 3 }).notNull(),
+
+  status: varchar("status", { length: 16 }).notNull().default("pending"),
+  // pending | paid | canceled | refunded
+
+  stripeCheckoutSessionId: text("stripe_checkout_session_id"),
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+
+export const teacherAvailability = pgTable("teacher_availability", {
+  id: serial("id").primaryKey(),
+
+  teacherId: integer("teacher_id")
+    .notNull()
+    .references(() => users.id),
+
+  // UTC range
+  startUtc: timestamp("start_utc", { withTimezone: true }).notNull(),
+  endUtc: timestamp("end_utc", { withTimezone: true }).notNull(),
+
+  // optional: "manual" | "rule" (kannst du später nutzen)
+  source: varchar("source", { length: 16 }).notNull().default("manual"),
+
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;

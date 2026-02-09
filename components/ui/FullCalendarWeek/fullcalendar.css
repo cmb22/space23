@@ -1,0 +1,12 @@
+@import "@fullcalendar/core/index.css";
+@import "@fullcalendar/daygrid/index.css";
+@import "@fullcalendar/timegrid/index.css";
+
+/* deine Custom Overrides */
+.fc .fc-free-slot {
+    background: rgba(79, 156, 255, 0.25);
+}
+
+.fc .fc-event {
+    border: none;
+}

@@ -1,0 +1,154 @@
+.page {
+  background: #f6f7fb;
+  min-height: 100vh;
+}
+
+.hero {
+  position: relative;
+  background: #fff;
+}
+
+.heroInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 16px 0;
+}
+
+.heroBand {
+  position: relative;
+  margin-top: 10px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #f7d34b;
+}
+
+.heroBand::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 70px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23f6f7fb' d='M0,64L60,74.7C120,85,240,107,360,101.3C480,96,600,64,720,58.7C840,53,960,75,1080,80C1200,85,1320,75,1380,69.3L1440,64L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z'/%3E%3C/svg%3E");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  padding: 56px 28px 66px;
+}
+
+.heroKicker {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+.heroTitle {
+  font-size: 46px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  color: #111827;
+}
+
+.heroSub {
+  font-size: 18px;
+  color: rgba(17, 24, 39, 0.85);
+  max-width: 54ch;
+  margin: 0 0 18px;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primaryCta {
+  background: #1b84ff;
+  color: #fff;
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(27, 132, 255, 0.22);
+}
+
+.how {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 18px 18px;
+  align-self: center;
+  backdrop-filter: blur(8px);
+}
+
+.howTitle {
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.howList {
+  margin: 0;
+  padding: 0 0 0 18px;
+  display: grid;
+  gap: 6px;
+}
+
+.filters {
+  max-width: 1200px;
+  margin: -22px auto 0;
+  padding: 0 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.filtersInner {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 12px 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.06);
+}
+
+.filterGroup {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filterPill {
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  background: #fff;
+  border-radius: 999px;
+  padding: 9px 12px;
+  font-weight: 700;
+  min-width: 130px;
+  text-align: left;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 22px 16px 60px;
+}
+
+@media (max-width: 980px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+    padding: 40px 18px 66px;
+  }
+  .heroTitle {
+    font-size: 38px;
+  }
+}

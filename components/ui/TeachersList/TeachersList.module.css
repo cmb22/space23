@@ -1,0 +1,601 @@
+.page {
+  width: 100%;
+  background: #f7f8fb;
+}
+
+.filters {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: transparent;
+  padding: 18px 0 14px;
+}
+
+.filtersInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+}
+
+.filterPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: #fff;
+  border-radius: 999px;
+  padding: 10px 14px;
+
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pillIcon {
+  opacity: 0.85;
+}
+
+.chev {
+  opacity: 0.65;
+  font-weight: 900;
+}
+
+.filtersRight {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.main {
+  width: 100%;
+  padding: 0 0 80px;
+}
+
+.list {
+  max-width: 1200px;
+  margin: 18px auto 0;
+  padding: 0 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.empty {
+  background: #fff;
+  border: 1px dashed rgba(0, 0, 0, 0.22);
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.emptyTitle {
+  font-weight: 900;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.emptyText {
+  opacity: 0.75;
+}
+
+/* ROW: preview doesn't reserve space */
+.row {
+  position: relative;
+  display: block;
+  max-width: 75%;
+}
+
+/* LEFT CARD */
+.card {
+  position: relative;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
+}
+
+.card:hover {
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.08);
+}
+
+.cardLinkArea {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  z-index: 1;
+}
+
+.cardInner {
+  position: relative;
+  z-index: 2;
+
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 14px;
+  min-height: 170px;
+}
+
+.avatarWrap {
+  width: 96px;
+  height: 96px;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 16px;
+  object-fit: cover;
+  background: #f1f1f1;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  display: block;
+}
+
+.avatarFallback {
+  width: 96px;
+  height: 96px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 24px;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.topRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 900;
+  margin: 0;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.sub {
+  margin-top: 2px;
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.heart {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  cursor: pointer;
+  z-index: 3;
+  position: relative;
+}
+
+.speaksRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+.speaksLabel {
+  font-weight: 800;
+  opacity: 0.7;
+}
+
+.langBadges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.langBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.langBadgeMuted {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  font-weight: 800;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.bio {
+  opacity: 0.82;
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star {
+  color: #f59e0b;
+}
+
+.ratingValue {
+  font-weight: 900;
+}
+
+.dot {
+  opacity: 0.6;
+}
+
+.lessons {
+  opacity: 0.8;
+  font-weight: 700;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.price {
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.bookBtn {
+  position: relative;
+  z-index: 4;
+
+  background: #e91e63;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.bookBtn:hover {
+  filter: brightness(0.98);
+}
+
+/* PREVIEW: hidden by default, appears on hover */
+.preview {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translateX(calc(100% + 18px));
+  width: 440px;
+  /* height: 640px; */
+
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.10);
+  /* overflow: hidden; */
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+/* linkes Dreieck */
+.preview::before {
+  content: "";
+  position: absolute;
+
+  /* Position links mittig */
+  left: -10px;
+  top: 110px;
+  /* ggf. leicht anpassen */
+
+  width: 0;
+  height: 0;
+
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #fff;
+  /* gleiche Farbe wie Box */
+
+  /* optional: kleiner Schatten wie Card */
+  filter: drop-shadow(-1px 0 1px rgba(0, 0, 0, 0.12));
+}
+
+.previewVisible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.calendarWrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.triangle {
+  position: absolute;
+  left: -180px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 100px 200px 100px 0px;
+  border-color: transparent black transparent transparent;
+  transform: rotate(0deg);
+}
+
+.previewMedia {
+  position: relative;
+  height: 180px;
+  background: #eee;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.previewPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f3f3f3, #eaeaea);
+}
+
+.playOverlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  width: 52px;
+  height: 52px;
+  margin: auto;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 1280px) {
+  .preview {
+    width: 380px;
+    height: 320px;
+  }
+}
+
+@media (max-width: 980px) {
+  .preview {
+    display: none;
+  }
+}
+
+/* MINI CALENDAR */
+.miniCal {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.miniCalHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.miniCalTitle {
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.miniCalSub {
+  opacity: 0.65;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.miniCalDays {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.miniCalDay {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.miniCalDayLabel {
+  font-weight: 900;
+  font-size: 12px;
+  margin-bottom: 8px;
+  opacity: 0.85;
+}
+
+.miniCalSlotGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.miniCalSlot {
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 10px;
+  font-weight: 900;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.miniCalSlot:hover {
+  filter: brightness(0.98);
+}
+
+.miniCalSlotDur {
+  opacity: 0.65;
+  font-weight: 900;
+  font-size: 11px;
+}
+
+.miniCalHint {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: auto;
+}
+
+.miniCalLoading,
+.miniCalEmpty,
+.miniCalError {
+  height: 100%;
+  border-radius: 14px;
+  border: 1px dashed rgba(0, 0, 0, 0.18);
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  font-weight: 800;
+  opacity: 0.85;
+}
+
+.miniCalError {
+  border-style: solid;
+  border-color: rgba(255, 0, 0, 0.25);
+  background: rgba(255, 0, 0, 0.06);
+}
+
+/* MODAL */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  z-index: 50;
+}
+
+.modal {
+  width: min(980px, 100%);
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.modalHeader {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.modalSub {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.modalClose {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.modalBody {
+  padding: 14px 16px;
+}
+
+.calendarPlaceholder {
+  border: 1px dashed rgba(0, 0, 0, 0.25);
+  border-radius: 14px;
+  padding: 18px;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+  opacity: 0.9;
+}
+
+.modalSlotLine {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.modalSlotMuted {
+  opacity: 0.7;
+}
+
+.modalHint {
+  margin-top: 10px;
+  opacity: 0.7;
+  font-size: 13px;
+}

@@ -3,12 +3,26 @@
 import Link from 'next/link';
 import { useActionState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
 import { CircleIcon, Loader2 } from 'lucide-react';
 import { signIn, signUp } from './actions';
 import { ActionState } from '@/lib/auth/middleware';
+import { signIn as signInSocial } from "next-auth/react";
+
+export function SocialButtons() {
+  return (
+    <>
+      <button onClick={() => signInSocial("google", { callbackUrl: "/api/auth/bridge" })}>
+        Continue with Google
+      </button>
+      <button onClick={() => signInSocial("facebook", { callbackUrl: "/api/auth/bridge" })}>
+        Continue with Facebook
+      </button>
+    </>
+  );
+}
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const searchParams = useSearchParams();
@@ -88,7 +102,20 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           {state?.error && (
             <div className="text-red-500 text-sm">{state.error}</div>
           )}
+          <div>
+            <label>Account type</label>
+            <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+              <label>
+                <input type="radio" name="role" value="student" defaultChecked />
+                Student
+              </label>
 
+              <label>
+                <input type="radio" name="role" value="teacher" />
+                Teacher
+              </label>
+            </div>
+          </div>
           <div>
             <Button
               type="submit"
@@ -125,9 +152,8 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
 
           <div className="mt-6">
             <Link
-              href={`${mode === 'signin' ? '/sign-up' : '/sign-in'}${
-                redirect ? `?redirect=${redirect}` : ''
-              }${priceId ? `&priceId=${priceId}` : ''}`}
+              href={`${mode === 'signin' ? '/sign-up' : '/sign-in'}${redirect ? `?redirect=${redirect}` : ''
+                }${priceId ? `&priceId=${priceId}` : ''}`}
               className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
             >
               {mode === 'signin'

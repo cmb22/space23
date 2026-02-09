@@ -40,23 +40,38 @@ async function createStripeProducts() {
 }
 
 async function seed() {
-  const email = 'test@test.com';
+  // Create two product roles
+  const teacherEmail = 'teacher+1@test.com';
+  const studentEmail = 'student+1@test.com';
   const password = 'admin123';
-  const passwordHash = await hashPassword(password);
 
-  const [user] = await db
+  const teacherPasswordHash = await hashPassword(password);
+  const studentPasswordHash = await hashPassword(password);
+
+  // 1) Teacher user (PRODUCT ROLE)
+  const [teacher] = await db
     .insert(users)
     .values([
       {
-        email: email,
-        passwordHash: passwordHash,
-        role: "owner",
+        email: teacherEmail,
+        passwordHash: teacherPasswordHash,
+        role: 'teacher', // <-- product role
       },
     ])
     .returning();
 
-  console.log('Initial user created.');
+  // 2) Student user (PRODUCT ROLE)
+  await db.insert(users).values([
+    {
+      email: studentEmail,
+      passwordHash: studentPasswordHash,
+      role: 'student', // <-- product role
+    },
+  ]);
 
+  console.log('Teacher + Student users created.');
+
+  // 3) Create a team (SaaS-starter concept)
   const [team] = await db
     .insert(teams)
     .values({
@@ -64,10 +79,11 @@ async function seed() {
     })
     .returning();
 
+  // 4) Teacher is owner in the team (TEAM ROLE)
   await db.insert(teamMembers).values({
     teamId: team.id,
-    userId: user.id,
-    role: 'owner',
+    userId: teacher.id,
+    role: 'owner', // <-- team role
   });
 
   await createStripeProducts();

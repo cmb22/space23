@@ -1,23 +1,23 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/Button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardFooter
-} from '@/components/ui/card';
+} from '@/components/ui/Card';
 import { customerPortalAction } from '@/lib/payments/actions';
 import { useActionState } from 'react';
 import { TeamDataWithMembers, User } from '@/lib/db/schema';
 import { removeTeamMember, inviteTeamMember } from '@/app/(login)/actions';
 import useSWR from 'swr';
 import { Suspense } from 'react';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/Input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/ui/Label';
 import { Loader2, PlusCircle } from 'lucide-react';
 
 type ActionState = {
@@ -56,8 +56,8 @@ function ManageSubscription() {
                 {teamData?.subscriptionStatus === 'active'
                   ? 'Billed monthly'
                   : teamData?.subscriptionStatus === 'trialing'
-                  ? 'Trial period'
-                  : 'No active subscription'}
+                    ? 'Trial period'
+                    : 'No active subscription'}
               </p>
             </div>
             <form action={customerPortalAction}>

@@ -1,34 +1,64 @@
-import Stripe from 'stripe';
-import { handleSubscriptionChange, stripe } from '@/lib/payments/stripe';
-import { NextRequest, NextResponse } from 'next/server';
+// app/api/stripe/webhook/route.ts
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+import Stripe from "stripe";
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db/drizzle";
+import { bookings } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
-export async function POST(request: NextRequest) {
-  const payload = await request.text();
-  const signature = request.headers.get('stripe-signature') as string;
+export const runtime = "nodejs";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2023-10-16",
+});
+
+async function readRawBody(req: Request) {
+  const buf = Buffer.from(await req.arrayBuffer());
+  return buf;
+}
+
+export async function POST(req: Request) {
+  const sig = req.headers.get("stripe-signature");
+  if (!sig) return NextResponse.json({ error: "Missing stripe-signature" }, { status: 400 });
+
+  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!secret) return NextResponse.json({ error: "Missing STRIPE_WEBHOOK_SECRET" }, { status: 500 });
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
-  } catch (err) {
-    console.error('Webhook signature verification failed.', err);
-    return NextResponse.json(
-      { error: 'Webhook signature verification failed.' },
-      { status: 400 }
-    );
+    const raw = await readRawBody(req);
+    event = stripe.webhooks.constructEvent(raw, sig, secret);
+  } catch (err: any) {
+    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
   }
 
-  switch (event.type) {
-    case 'customer.subscription.updated':
-    case 'customer.subscription.deleted':
-      const subscription = event.data.object as Stripe.Subscription;
-      await handleSubscriptionChange(subscription);
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
+  try {
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
 
-  return NextResponse.json({ received: true });
+      const bookingId = session.metadata?.bookingId;
+      if (!bookingId) {
+        return NextResponse.json({ ok: true, note: "No bookingId in metadata" });
+      }
+
+      // Optional: paymentIntent id speichern
+      const paymentIntentId =
+        typeof session.payment_intent === "string" ? session.payment_intent : null;
+
+      await db
+        .update(bookings)
+        .set({
+          status: "paid",
+          stripeCheckoutSessionId: session.id,
+          stripePaymentIntentId: paymentIntentId,
+          updatedAt: new Date(),
+        })
+        .where(eq(bookings.id, Number(bookingId)));
+    }
+
+    return NextResponse.json({ received: true });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message || "Webhook handler failed" }, { status: 500 });
+  }
 }

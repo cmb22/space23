@@ -1,0 +1,155 @@
+.wrap {
+    max-width: 980px;
+    margin: 24px auto;
+    padding: 0 16px 48px;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+
+.header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.avatar img {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    object-fit: cover;
+}
+
+.avatarFallback {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.headText {
+    flex: 1;
+}
+
+.title {
+    margin: 0;
+    font-size: 24px;
+}
+
+.meta {
+    display: flex;
+    gap: 8px;
+    opacity: 0.75;
+    margin-top: 4px;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tag {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.bio {
+    margin: 10px 0 18px;
+    opacity: 0.85;
+}
+
+.card {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 14px;
+    padding: 16px;
+    background: #fff;
+}
+
+.row {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.label {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 6px;
+}
+
+.pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pill {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.pillActive {
+    border-color: rgba(0, 0, 0, 0.5);
+}
+
+.price {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.section {
+    margin-top: 18px;
+}
+
+.sectionTitle {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.muted {
+    opacity: 0.7;
+}
+
+.slots {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.slotRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 10px;
+}
+
+.slotTime {
+    font-weight: 600;
+}
+
+.bookBtn {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 8px 12px;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.error {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    background: rgba(255, 0, 0, 0.08);
+}

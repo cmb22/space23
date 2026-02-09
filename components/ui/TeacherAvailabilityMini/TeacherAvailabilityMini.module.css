@@ -1,0 +1,229 @@
+.wrap {
+    position: relative;
+    width: 100%;
+}
+
+.arrow {
+    position: absolute;
+    left: -10px;
+    top: 28px;
+
+    width: 20px;
+    height: 20px;
+    transform: rotate(45deg);
+
+    background: #fff;
+    border-left: 1px solid rgba(0, 0, 0, 0.10);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+    box-shadow: -8px 10px 22px rgba(0, 0, 0, 0.06);
+    border-bottom-left-radius: 6px;
+}
+
+.inner {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    border-radius: 18px;
+    padding: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
+}
+
+.top {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.avatarWrap {
+    width: 64px;
+    height: 64px;
+}
+
+.avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    object-fit: cover;
+    display: block;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.avatarFallback {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.topText {
+    min-width: 0;
+}
+
+.title {
+    font-weight: 900;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.sub {
+    font-size: 12px;
+    opacity: 0.72;
+    line-height: 1.2;
+}
+
+.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.weekHeader {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 8px;
+}
+
+.weekHeaderCell {
+    text-align: center;
+    padding: 6px 0;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.weekDow {
+    font-size: 11px;
+    opacity: 0.75;
+    font-weight: 800;
+}
+
+.weekDayNum {
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.cell {
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.02);
+    padding: 8px;
+    min-height: 96px;
+    overflow: hidden;
+}
+
+.pills {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pill {
+    width: 100%;
+    text-align: left;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    background: #fff;
+    border-radius: 12px;
+    padding: 6px 8px;
+    cursor: pointer;
+}
+
+.pill:hover {
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.06);
+}
+
+.pillTop {
+    display: block;
+    font-weight: 900;
+    font-size: 11px;
+}
+
+.pillBottom {
+    display: block;
+    margin-top: 2px;
+    font-size: 10px;
+    opacity: 0.70;
+    font-weight: 700;
+}
+
+.more {
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    opacity: 0.70;
+}
+
+.empty {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    opacity: 0.45;
+}
+
+.error {
+    font-size: 11px;
+    color: crimson;
+    white-space: pre-wrap;
+}
+
+.skeleton {
+    height: 16px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.reload {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    border-radius: 12px;
+    padding: 8px 10px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.reload:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Mobile: 7 Spalten bleiben, aber kleiner */
+@media (max-width: 520px) {
+    .inner {
+        padding: 12px;
+    }
+
+    .cell {
+        padding: 6px;
+        min-height: 86px;
+    }
+
+    .pill {
+        padding: 6px 7px;
+    }
+
+    .pillTop {
+        font-size: 10px;
+    }
+
+    .pillBottom {
+        font-size: 9px;
+    }
+}

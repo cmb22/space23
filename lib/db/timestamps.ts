@@ -1,0 +1,1 @@
+export const touch = () => ({ updatedAt: new Date() });

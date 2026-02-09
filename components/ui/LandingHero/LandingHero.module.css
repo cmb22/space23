@@ -1,0 +1,162 @@
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: white;
+    /* PDF-like yellow */
+    padding: 56px 0 120px;
+    /* bottom space so wave never overlaps content */
+}
+
+.inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 22px;
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 24px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    /* above wave */
+}
+
+.left {
+    max-width: 720px;
+}
+
+.kicker {
+    font-weight: 700;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.title {
+    margin: 0;
+    font-size: 44px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.titleLine {
+    display: block;
+}
+
+.subtitle {
+    margin: 14px 0 0;
+    max-width: 560px;
+    font-size: 16px;
+    line-height: 1.55;
+    color: rgba(15, 23, 42, 0.85);
+}
+
+.ctaRow {
+    margin-top: 18px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.ctaButton {
+    border: 0;
+    background: #1d4ed8;
+    /* blue like PDF CTA */
+    color: #fff;
+    font-weight: 800;
+    border-radius: 999px;
+    padding: 12px 18px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(29, 78, 216, 0.24);
+}
+
+.ctaButton:hover {
+    filter: brightness(0.98);
+}
+
+.right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.howCard {
+    width: min(360px, 100%);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 18px 18px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(6px);
+}
+
+.howTitle {
+    font-weight: 900;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #0f172a;
+}
+
+.howList {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 8px;
+    color: rgba(15, 23, 42, 0.85);
+    font-weight: 600;
+}
+
+/* THE WAVE */
+.wave {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+.waveOverlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    width: 100%;
+    height: 55%;
+    background: #f7d51c;
+    /* same as hero bg to "erase" wave overflow */
+    z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+    .inner {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .right {
+        justify-content: flex-start;
+    }
+
+    .title {
+        font-size: 38px;
+    }
+
+    .hero {
+        padding-bottom: 140px;
+        /* extra space for wave on smaller screens */
+    }
+}
+
+@media (max-width: 520px) {
+    .title {
+        font-size: 32px;
+    }
+
+    .hero {
+        padding: 40px 0 150px;
+    }
+}
