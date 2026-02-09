@@ -18,16 +18,17 @@ type TeacherRow = {
 type ApiResponse = { teachers: TeacherRow[] };
 
 const getTeachers = async (): Promise<TeacherRow[]> => {
+  console.log("process.env.NEXT_PUBLIC_BASE_URL", process.env.NEXT_PUBLIC_BASE_URL);
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/teachers`, {
     cache: "no-store",
   });
 
   // Fallback if NEXT_PUBLIC_APP_URL not set (local dev)
-  if (!res.ok) {
-    const localRes = await fetch("http://localhost:3000/api/teachers", { cache: "no-store" });
-    const localData = (await localRes.json()) as ApiResponse;
-    return localData.teachers ?? [];
-  }
+  // if (!res.ok) {
+  //   const localRes = await fetch("http://localhost:3000/api/teachers", { cache: "no-store" });
+  //   const localData = (await localRes.json()) as ApiResponse;
+  //   return localData.teachers ?? [];
+  // }
 
   const data = (await res.json()) as ApiResponse;
   return data.teachers ?? [];
